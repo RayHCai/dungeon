@@ -18,6 +18,11 @@ class Commands:
 
         return unlock.Unlock()
 
+    def gen_seal_command(self):
+        from . import seal
+
+        return seal.Seal()
+
     def help(self, obj):
         '''
         Help sub command for all commands. Prints out a list of all sub commands on command object

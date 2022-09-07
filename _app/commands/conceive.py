@@ -89,10 +89,12 @@ class Conceive:
             
             return
 
-        try:
-            self._create_user_creds()
-        except ValueError as e:
-            raise e
+        with open(self.user_info_path) as user_info_json:
+            if json.loads(user_info_json.read()) == {}:
+                try:
+                    self._create_user_creds()
+                except ValueError as e:
+                    raise e
 
         try:
             self._gen_dungeon()
@@ -171,6 +173,8 @@ class Conceive:
             if '--wipe' in args:
                 helpers.wipe_user_creds() 
 
+            helpers.empty_recycle_bin()
+
             print('Dungeon flushed')
         else:
             print('Flush aborted')
@@ -193,6 +197,8 @@ class Conceive:
                 return
 
             shutil.rmtree(self.dungeon_path)
+
+            helpers.empty_recycle_bin()
 
             try:
                 self._gen_dungeon()

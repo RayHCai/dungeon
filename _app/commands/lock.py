@@ -8,7 +8,7 @@ class Lock:
     Lock command class
     '''
 
-    description = 'Lock the dungeon.'
+    description = 'Manually lock the dungeon.'
 
     dungeon_path = os.path.join(
         Path(

@@ -1,6 +1,9 @@
 import os
 import json
+import time
 import hashlib
+import winshell
+import threading
 from datetime import datetime
 from getpass import getpass
 from pathlib import Path
@@ -73,3 +76,13 @@ def wipe_user_creds():
         user_info_json.write(
             json.dumps({})
         )
+
+def empty_recycle_bin():
+    '''
+    Helper method to empty recycle bin
+    '''
+    
+    try:
+        winshell.recycle_bin().empty(confirm=False, show_progress=False, sound=False)
+    except:
+        pass
