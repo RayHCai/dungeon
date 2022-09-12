@@ -6,6 +6,6 @@ A hidden file system for windows.
 
 - Run install.py (need pip installed)
 
-### Local Use
+### Use
 
 Open terminal and run `dungeon` for a list of comamnds.
