@@ -1,7 +1,7 @@
 import os
-from pathlib import Path
 
 from dungeon_base import helpers, errors
+from dungeon_base.helpers import DUNGEON_PATH
 
 class Unlock:
     '''
@@ -9,12 +9,6 @@ class Unlock:
     '''
 
     description = 'Open current instance of dungeon'
-
-    dungeon_path = os.path.join(
-        Path(
-            os.path.dirname(__file__)
-        ).parent, '__thedungeon'
-    )
 
     def run(self):
         '''
@@ -28,8 +22,8 @@ class Unlock:
             if not helpers.login():
                 return
 
-            cur_subfolder = os.path.join(self.dungeon_path, os.walk(self.dungeon_path).__next__()[1][0])
+            cur_subfolder = os.path.join(DUNGEON_PATH, os.walk(DUNGEON_PATH).__next__()[1][0])
 
-            os.startfile(os.path.join(self.dungeon_path, cur_subfolder))
+            os.startfile(os.path.join(DUNGEON_PATH, cur_subfolder))
         except StopIteration:
             raise errors.DungeonDoesNotExist()

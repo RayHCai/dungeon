@@ -1,8 +1,8 @@
 import os
 import shutil
-from pathlib import Path
 
 from dungeon_base import helpers, errors
+from dungeon_base.helpers import DUNGEON_PATH
 
 from . import Commands
 
@@ -11,19 +11,13 @@ class Seal:
     Seal command class
     '''
 
-    description = 'Generate temporary folder for transfer. Once closed it will move all files from the temporary folder to the dungeon and lock it.'
-
-    dungeon_path = os.path.join(
-        Path(
-            os.path.dirname(__file__)
-        ).parent, '__thedungeon'
-    )
+    description = 'Generate temporary folder for transfer. Sub command lock will move all files from the temporary folder to the dungeon.'
 
     temp_folder_path = None
 
-    def clear(self):
+    def _clear(self):
         '''
-        Delete all temporary folders
+        Private method that deletes all temporary folders
         '''
 
         for file in os.listdir(os.path.dirname(__file__)):
@@ -43,7 +37,7 @@ class Seal:
         '''
 
         try:
-            dungeon_subfolder_path = os.path.join(self.dungeon_path, os.walk(self.dungeon_path).__next__()[1][0])
+            dungeon_subfolder_path = os.path.join(DUNGEON_PATH, os.walk(DUNGEON_PATH).__next__()[1][0])
         except StopIteration:
             raise errors.DungeonDoesNotExist()
 
@@ -82,8 +76,11 @@ class Seal:
         else:
             print(f'There was a problem moving these files:')  
             
-            for error in file_errors:
-                print(f"{error.get('file_name')} -> {error.get('error')}")
+            for full_error in file_errors:
+                file_name = full_error.get('file_name')
+                error = full_error.get('error')
+
+                print(f'{file_name} -> {error}')
             
             print('Run `dungeon seal --lock` once you have resolved these issues')
 
@@ -97,12 +94,15 @@ class Seal:
             DungeonDoesNotExist: user tries to seal files into a dungeon that does not exist
         '''
 
-        if not helpers.login():
-            return
+        if not os.path.exists(DUNGEON_PATH):
+            raise errors.DungeonDoesNotExist()
 
         if sub_command is not None:
             if len(sub_command) < 3:
-                raise errors.CommandDoesNotExist(command='seal', sub_command=sub_command)
+                raise errors.CommandDoesNotExist(
+                    command='seal', 
+                    sub_command=sub_command
+                )
 
             sub_command = sub_command[2:] # remove -- from sub command
 
@@ -116,10 +116,15 @@ class Seal:
 
                 return
             except AttributeError:
-                raise errors.CommandDoesNotExist(command='seal', sub_command=sub_command)
+                raise errors.CommandDoesNotExist(
+                    command='seal', 
+                    sub_command=sub_command
+                )
 
-        if not os.path.exists(self.dungeon_path):
-            raise errors.DungeonDoesNotExist()
+        if not helpers.login():
+            return
+
+        self._clear()
 
         temp_folder_path = os.path.join(
             os.path.dirname(__file__),
