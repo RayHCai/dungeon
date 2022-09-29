@@ -1,20 +1,18 @@
 import os
 import json
-import time
 import hashlib
 import winshell
-import threading
 from datetime import datetime
 from getpass import getpass
 from pathlib import Path
 
-dungeon_path = os.path.join(
+DUNGEON_PATH = os.path.join(
     Path(
-        os.path.dirname(__file__)
-    ).parent, '__thedungeon'
+        'C:/Users/caifa/.cache'
+    ), '__thedungeon'
 )
 
-user_info_path = os.path.join(
+USER_INFO_PATH = os.path.join(
     Path(
         os.path.dirname(__file__)
     ).parent, '_secrets/user_info.json'
@@ -33,7 +31,7 @@ def login():
     email = input('Email: ')
     password = getpass('Password: ')
 
-    with open(user_info_path) as user_info_json:
+    with open(USER_INFO_PATH) as user_info_json:
         user_info = json.load(user_info_json)
 
         _username = user_info.get('username')
@@ -48,6 +46,16 @@ def login():
             return False
 
     return True
+
+def wipe_user_creds():
+    '''
+    Helper method to delete user credentials
+    '''
+
+    with open(USER_INFO_PATH, 'w') as user_info_json:
+        user_info_json.write(
+            json.dumps({})
+        )
 
 def gen_hash(base_string=None):
     '''
@@ -67,22 +75,16 @@ def gen_hash(base_string=None):
         base_string.encode()
     ).hexdigest()
 
-def wipe_user_creds():
-    '''
-    Helper method to delete user credentials
-    '''
-
-    with open(user_info_path, 'w') as user_info_json:
-        user_info_json.write(
-            json.dumps({})
-        )
-
 def empty_recycle_bin():
     '''
     Helper method to empty recycle bin
     '''
     
     try:
-        winshell.recycle_bin().empty(confirm=False, show_progress=False, sound=False)
+        winshell.recycle_bin().empty(
+            confirm=False, 
+            show_progress=False, 
+            sound=False
+        )
     except:
         pass

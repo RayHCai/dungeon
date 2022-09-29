@@ -1,7 +1,7 @@
 import os
-from pathlib import Path
 
 from dungeon_base import helpers, errors
+from dungeon_base.helpers import DUNGEON_PATH
 
 class Lock:
     '''
@@ -9,12 +9,6 @@ class Lock:
     '''
 
     description = 'Manually lock the dungeon.'
-
-    dungeon_path = os.path.join(
-        Path(
-            os.path.dirname(__file__)
-        ).parent, '__thedungeon'
-    )
 
     def run(self):
         '''
@@ -25,11 +19,11 @@ class Lock:
         '''
 
         try:
-            cur_subfolder = os.path.join(self.dungeon_path, os.walk(self.dungeon_path).__next__()[1][0])
+            cur_subfolder = os.path.join(DUNGEON_PATH, os.walk(DUNGEON_PATH).__next__()[1][0])
         except StopIteration:
             raise errors.DungeonDoesNotExist()
 
-        new_subfolder = os.path.join(self.dungeon_path, helpers.gen_hash())
+        new_subfolder = os.path.join(DUNGEON_PATH, helpers.gen_hash())
 
         os.rename(cur_subfolder, new_subfolder)
 
