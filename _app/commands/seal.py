@@ -121,9 +121,6 @@ class Seal:
                     sub_command=sub_command
                 )
 
-        if not helpers.login():
-            return
-
         self._clear()
 
         temp_folder_path = os.path.join(
