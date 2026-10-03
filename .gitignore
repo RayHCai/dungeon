@@ -1,4 +1,39 @@
-__pycache__
+# Local dungeon data and credentials
 _secrets
 __thedungeon
-dungeon.egg-info
+
+# Dependencies
+venv/
+.venv/
+
+# Build output
+build/
+dist/
+*.egg-info/
+
+# Caches and test output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# AI tool files
+.claude/
+CLAUDE.md
+AGENTS.md
